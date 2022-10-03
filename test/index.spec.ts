@@ -1,6 +1,6 @@
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
-import { app, server } from '../index';
+import { app, server, cronJob } from '../index';
 chai.use(chaiHttp);
 
 describe('Our lovely server', () => {
@@ -15,6 +15,9 @@ describe('Our lovely server', () => {
         expect(res).to.have.status(200);
         done();
       });
-    after(() => server.close());
+  });
+  after(() => {
+    server.close();
+    cronJob.stop();
   });
 });

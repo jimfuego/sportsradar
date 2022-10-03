@@ -41,6 +41,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/express", "npm:4.17.14"],\
             ["@types/mocha", "npm:10.0.0"],\
             ["@types/node", "npm:18.7.23"],\
+            ["@types/node-cron", "npm:3.0.4"],\
             ["@types/prettier", "npm:2.7.1"],\
             ["@typescript-eslint/eslint-plugin", "virtual:4fb8fec1cfabd9c7ec0f10ef3c55c130e257973351900c3c31befc25fc9acbf1b30c747722bcfe5c4aeba297b91d7e84cd2d4162621c8e78eeb0b4e1da6fc589#npm:5.38.1"],\
             ["@typescript-eslint/parser", "virtual:4fb8fec1cfabd9c7ec0f10ef3c55c130e257973351900c3c31befc25fc9acbf1b30c747722bcfe5c4aeba297b91d7e84cd2d4162621c8e78eeb0b4e1da6fc589#npm:5.38.1"],\
@@ -50,6 +51,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express", "npm:4.18.1"],\
             ["husky", "npm:8.0.1"],\
             ["mocha", "npm:10.0.0"],\
+            ["node-cron", "npm:3.0.2"],\
             ["nodemon", "npm:2.0.20"],\
             ["postgres", "npm:3.3.0"],\
             ["prettier", "npm:2.7.1"],\
@@ -358,6 +360,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-node-npm-18.7.23-070e968159-2c8df0830d.zip/node_modules/@types/node/",\
           "packageDependencies": [\
             ["@types/node", "npm:18.7.23"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/node-cron", [\
+        ["npm:3.0.4", {\
+          "packageLocation": "./.yarn/cache/@types-node-cron-npm-3.0.4-4b34da0a31-52d87ca7b6.zip/node_modules/@types/node-cron/",\
+          "packageDependencies": [\
+            ["@types/node-cron", "npm:3.0.4"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2828,6 +2839,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["node-cron", [\
+        ["npm:3.0.2", {\
+          "packageLocation": "./.yarn/cache/node-cron-npm-3.0.2-5ee1c1c226-dd21585c0d.zip/node_modules/node-cron/",\
+          "packageDependencies": [\
+            ["node-cron", "npm:3.0.2"],\
+            ["uuid", "npm:8.3.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["node-gyp", [\
         ["npm:9.1.0", {\
           "packageLocation": "./.yarn/unplugged/node-gyp-npm-9.1.0-2091059b31/node_modules/node-gyp/",\
@@ -3532,6 +3553,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/express", "npm:4.17.14"],\
             ["@types/mocha", "npm:10.0.0"],\
             ["@types/node", "npm:18.7.23"],\
+            ["@types/node-cron", "npm:3.0.4"],\
             ["@types/prettier", "npm:2.7.1"],\
             ["@typescript-eslint/eslint-plugin", "virtual:4fb8fec1cfabd9c7ec0f10ef3c55c130e257973351900c3c31befc25fc9acbf1b30c747722bcfe5c4aeba297b91d7e84cd2d4162621c8e78eeb0b4e1da6fc589#npm:5.38.1"],\
             ["@typescript-eslint/parser", "virtual:4fb8fec1cfabd9c7ec0f10ef3c55c130e257973351900c3c31befc25fc9acbf1b30c747722bcfe5c4aeba297b91d7e84cd2d4162621c8e78eeb0b4e1da6fc589#npm:5.38.1"],\
@@ -3541,6 +3563,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express", "npm:4.18.1"],\
             ["husky", "npm:8.0.1"],\
             ["mocha", "npm:10.0.0"],\
+            ["node-cron", "npm:3.0.2"],\
             ["nodemon", "npm:2.0.20"],\
             ["postgres", "npm:3.3.0"],\
             ["prettier", "npm:2.7.1"],\
@@ -3917,6 +3940,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/utils-merge-npm-1.0.1-363bbdfbca-c810954932.zip/node_modules/utils-merge/",\
           "packageDependencies": [\
             ["utils-merge", "npm:1.0.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["uuid", [\
+        ["npm:8.3.2", {\
+          "packageLocation": "./.yarn/cache/uuid-npm-8.3.2-eca0baba53-5575a8a75c.zip/node_modules/uuid/",\
+          "packageDependencies": [\
+            ["uuid", "npm:8.3.2"]\
           ],\
           "linkType": "HARD"\
         }]\

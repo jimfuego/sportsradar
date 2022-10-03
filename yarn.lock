@@ -253,6 +253,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node-cron@npm:^3":
+  version: 3.0.4
+  resolution: "@types/node-cron@npm:3.0.4"
+  checksum: 52d87ca7b64a941a2bfcca56dd823456d0cefacdfbfbed1c5d6ba92c8d60205ad0d42d14f676f96b12cc715f671a0392d82e82b79dda7e943398c996f86d2e33
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:*, @types/node@npm:^18.7.23":
   version: 18.7.23
   resolution: "@types/node@npm:18.7.23"
@@ -2299,6 +2306,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"node-cron@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "node-cron@npm:3.0.2"
+  dependencies:
+    uuid: 8.3.2
+  checksum: dd21585c0d4069a0752022dad9b8380a4393c4783ec78355ffa99ff32b018c3743a35d4ebf9d7c7863949e94e302b440f58c884eb4960e71c7260d817e2d3f25
+  languageName: node
+  linkType: hard
+
 "node-gyp@npm:latest":
   version: 9.1.0
   resolution: "node-gyp@npm:9.1.0"
@@ -2917,6 +2933,7 @@ __metadata:
     "@types/express": ^4
     "@types/mocha": ^10
     "@types/node": ^18.7.23
+    "@types/node-cron": ^3
     "@types/prettier": ^2
     "@typescript-eslint/eslint-plugin": ^5.30.7
     "@typescript-eslint/parser": ^5.30.7
@@ -2926,6 +2943,7 @@ __metadata:
     express: ^4.18.1
     husky: ^8.0.1
     mocha: ^10.0.0
+    node-cron: ^3.0.2
     nodemon: ^2.0.19
     postgres: ^3.3.0
     prettier: ^2.7.1
@@ -3249,6 +3267,15 @@ __metadata:
   version: 1.0.1
   resolution: "utils-merge@npm:1.0.1"
   checksum: c81095493225ecfc28add49c106ca4f09cdf56bc66731aa8dabc2edbbccb1e1bfe2de6a115e5c6a380d3ea166d1636410b62ef216bb07b3feb1cfde1d95d5080
+  languageName: node
+  linkType: hard
+
+"uuid@npm:8.3.2":
+  version: 8.3.2
+  resolution: "uuid@npm:8.3.2"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 5575a8a75c13120e2f10e6ddc801b2c7ed7d8f3c8ac22c7ed0c7b2ba6383ec0abda88c905085d630e251719e0777045ae3236f04c812184b7c765f63a70e58df
   languageName: node
   linkType: hard
 

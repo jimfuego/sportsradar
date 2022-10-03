@@ -1,4 +1,5 @@
 import express from 'express';
+import cron from 'node-cron';
 
 const app = express();
 app.use(express.json());
@@ -14,4 +15,9 @@ const server = app.listen(PORT, () => {
   console.log(`Server running on ${PORT}.`);
 });
 
-export { server, app };
+const cronIntervalSeconds = '30'; //seconds
+const cronJob = cron.schedule(`*/${cronIntervalSeconds} * * * * *`, () => {
+  console.log(`running a task every ${cronIntervalSeconds} seconds`);
+});
+
+export { server, app, cronJob };
