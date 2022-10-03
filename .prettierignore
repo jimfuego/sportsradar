@@ -1,3 +1,4 @@
-.yarn
-dist
+.yarn/
+dist/
+lib/
 node_modules
