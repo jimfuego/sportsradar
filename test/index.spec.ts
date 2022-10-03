@@ -1,5 +1,8 @@
-import { expect } from 'chai';
-import app from '../index';
+import { doesNotMatch } from 'assert';
+import chai, { expect } from 'chai';
+import chaiHttp from 'chai-http';
+import { app, server } from '../index';
+chai.use(chaiHttp);
 
 describe('Our lovely server', () => {
   // Called once before any of the tests in this block begin.
@@ -14,7 +17,14 @@ describe('Our lovely server', () => {
     expect(1).to.equal(1);
   });
 
-  it('GET /', function () {
-    expect(1).to.equal(1);
+  it('GET /', function (done) {
+    chai
+      .request(app)
+      .get('/')
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        done();
+      });
+    after(() => server.close());
   });
 });

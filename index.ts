@@ -8,8 +8,8 @@ app.get('/', (req, res, next) => {
     message: 'Running Node with Express and Typescript',
   });
 });
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server running on ${PORT}.`);
 });
 
-export default app;
+export { server, app };
