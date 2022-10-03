@@ -42,6 +42,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express", "npm:4.18.1"],\
             ["husky", "npm:8.0.1"],\
             ["nodemon", "npm:2.0.20"],\
+            ["postgres", "npm:3.3.0"],\
             ["prettier", "npm:2.7.1"],\
             ["ts-node", "virtual:4fb8fec1cfabd9c7ec0f10ef3c55c130e257973351900c3c31befc25fc9acbf1b30c747722bcfe5c4aeba297b91d7e84cd2d4162621c8e78eeb0b4e1da6fc589#npm:10.9.1"],\
             ["typescript", "patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=a1c5e5"]\
@@ -2595,6 +2596,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["postgres", [\
+        ["npm:3.3.0", {\
+          "packageLocation": "./.yarn/cache/postgres-npm-3.3.0-a3c987b188-0f637f17c0.zip/node_modules/postgres/",\
+          "packageDependencies": [\
+            ["postgres", "npm:3.3.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["prelude-ls", [\
         ["npm:1.2.1", {\
           "packageLocation": "./.yarn/cache/prelude-ls-npm-1.2.1-3e4d272a55-cd192ec0d0.zip/node_modules/prelude-ls/",\
@@ -2994,6 +3004,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express", "npm:4.18.1"],\
             ["husky", "npm:8.0.1"],\
             ["nodemon", "npm:2.0.20"],\
+            ["postgres", "npm:3.3.0"],\
             ["prettier", "npm:2.7.1"],\
             ["ts-node", "virtual:4fb8fec1cfabd9c7ec0f10ef3c55c130e257973351900c3c31befc25fc9acbf1b30c747722bcfe5c4aeba297b91d7e84cd2d4162621c8e78eeb0b4e1da6fc589#npm:10.9.1"],\
             ["typescript", "patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=a1c5e5"]\
