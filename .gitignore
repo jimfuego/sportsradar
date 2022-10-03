@@ -6,6 +6,7 @@
 !.yarn/versions
 
 dist/
+lib/
 .env
 node_modules
 index.js
