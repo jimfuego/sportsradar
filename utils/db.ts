@@ -1,3 +1,8 @@
+/**
+ * @file db.ts
+ * This file connects to our Postgres server using variables that should be
+ * defined in ./.env. Please see README.md for more details.
+ */
 import postgres from 'postgres';
 interface IOptions {
   host: string;
