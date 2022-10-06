@@ -20,6 +20,6 @@ const options: IOptions = {
   password: process.env.PG_PASSWORD as string,
 };
 
-const sql = postgres(options); // will use psql environment variables
+const sql = postgres(options);
 
 export default sql;

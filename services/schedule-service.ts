@@ -31,17 +31,17 @@ export default class ScheduleService {
    *
    * @returns
    */
-  static async getLiveGames(): // currentLiveGames: Set<string>
-  Promise<string[]> {
+  static async getLiveGames(): Promise<string[]> {
     return await this.getSchedule()
       .then((games) => {
-        return games.map(
-          ({ gamePk, status: { codedGameState: gameStateId } }) => {
-            if (gameStateId === GameState.IN_PROGRESS) {
-              return gamePk;
-            }
+        let liveGames: string[] = [];
+        for (let i = 0; i < games.length; i++) {
+          if (games[i].status.codedGameState === GameState.IN_PROGRESS) {
+            let gamePk: string = games[i].gamePk.toString();
+            liveGames.push(gamePk);
           }
-        );
+        }
+        return liveGames;
       })
       .catch((err) => {
         return [];
@@ -84,8 +84,6 @@ export default class ScheduleService {
     gameId: string,
     playIndex: number
   ): Promise<Record<string, any>> {
-    // let inProgress: boolean;
-    // let recentPlays: Record<string, any> =
     return await this.getLiveData(gameId)
       .then(
         ({
