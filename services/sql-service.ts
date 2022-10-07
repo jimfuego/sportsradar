@@ -40,7 +40,7 @@ const createBronzeTable = (): any => {
         points int not null,
         penalty_minutes int not null,
         player_type text not null,
-        event_hash text not null
+        event_hash text not null unique
       );`;
     let dbres = db.run(sql, (err) => {
       if (err) {

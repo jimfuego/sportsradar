@@ -5,9 +5,10 @@
  */
 import express, { Request, Response } from 'express';
 import db from '../utils/sqlite';
-import { createBronzeTable, seedBronzeTable } from '../services/sql-service';
+import { createBronzeTable, seedBronzeTable, } from '../services/sql-service';
 import { Responses } from '../utils';
 import { RESPONSE_CODES } from '../utils';
+import ScheduleService from '../services/schedule-service';
 
 const router = express.Router();
 const processErrorResponse = Responses.processErrorResponse;
@@ -20,9 +21,8 @@ const processResponse = Responses.processResponse;
  */
 router.post('/', async (req: Request, res: Response) => {
   try {
-    const body = { label: req.body as string };
     const createBronze = createBronzeTable();
-    processResponse(res, RESPONSE_CODES.OK, { data: createBronze });
+    processResponse(res, RESPONSE_CODES.CREATED, { data: createBronze });
   } catch (err) {
     processErrorResponse(res, err, RESPONSE_CODES.BAD_REQUEST);
   }
@@ -34,17 +34,33 @@ router.post('/', async (req: Request, res: Response) => {
  */
 router.post('/seed', async (req: Request, res: Response) => {
   try {
-    const body = { label: req.body as string };
-    const createBronze = createBronzeTable();
+    createBronzeTable();
     const bronzeSeed = seedBronzeTable();
-    processResponse(res, RESPONSE_CODES.OK, { data: bronzeSeed });
+    processResponse(res, RESPONSE_CODES.CREATED, { data: bronzeSeed });
   } catch (err) {
-    processErrorResponse(res, err, RESPONSE_CODES.BAD_REQUEST);
+    processErrorResponse(res, err, RESPONSE_CODES.INTERNAL_SERVER_ERROR);
   }
 });
 
 /**
- * GET
+ * POST: Adds 
+ * 
+ * @body string[] of gameIds
+ * /api/v1/app/bronze/add
+ */
+router.post('/add', async (req: Request, res: Response) => {
+  const body: [any] = req.body.gameIds;
+  try {
+    ScheduleService.getGamesById(body).then(dbResult => {
+      processResponse(res, RESPONSE_CODES.OK, dbResult)
+    });
+  } catch (err) {
+    processErrorResponse(res, err, RESPONSE_CODES.INTERNAL_SERVER_ERROR);
+  }
+});
+
+/**
+ * GET: Retrieves all bronze_table entries
  * /api/v1/app/bronze
  */
 router.get('/', async (req: Request, res: Response) => {
@@ -55,7 +71,7 @@ router.get('/', async (req: Request, res: Response) => {
       processResponse(res, RESPONSE_CODES.OK, { data: rows });
     });
   } catch (err) {
-    processErrorResponse(res, err, RESPONSE_CODES.BAD_REQUEST);
+    processErrorResponse(res, err, RESPONSE_CODES.INTERNAL_SERVER_ERROR);
   }
 });
 

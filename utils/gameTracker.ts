@@ -6,6 +6,8 @@
  */
 import ScheduleService from '../services/schedule-service';
 import { insertToBronze, writeEntriesToBronze } from '../services/sql-service';
+import { createHmac } from 'node:crypto';
+
 
 type Player = {
   player: {
@@ -54,7 +56,7 @@ class LiveGame {
   }
 
   getPlayerBio(playerId: string) {
-    return this.players[`ID${playerId.toString()}`];
+    return (!!playerId) ? this.players[`ID${playerId.toString()}`] : 'unavailable';
   }
 
   async init() {
@@ -74,9 +76,10 @@ class LiveGame {
     return await ScheduleService.getUpdatedData(this.gameId, this.playIndex)
       .then(async (update) => {
         let { plays: plays, inProgress: inProgress } = update;
-        plays.forEach((play: any, i: number) => {
+        plays.forEach((play: any) => {
           let entries = this.reduceToBronzeEntry(play);
           entries.forEach((entry) => {
+            console.log(entry)
             writeData.push(entry);
           });
         });
@@ -93,6 +96,46 @@ class LiveGame {
       .catch((err) => {
         throw err;
       });
+  }
+
+  reduceToBronzeEntry(play: any): BronzeEntry[] {
+    if (Object.keys(play).includes('players')) {
+      const players = play.players;
+      const result = play.result;
+      const eventIdx = play.about.eventIdx;
+      const dateTime = play.about.dateTime;
+      const entries: BronzeEntry[] = players.map((p: Player) => {
+        const player = p;
+        const playerId = player.player?.id || 'unavailable';
+        const playerName = player.player?.fullName?.toString();
+        const playerBio = this.getPlayerBio(playerId.toString());
+        const playDetails = this.playReducer(player, result);
+
+        // assumption: players will not appear in the same play twice
+        const secret = 'abcdefg';
+        const hash = createHmac('sha256', secret)
+          .update(`${eventIdx}${dateTime}${playerId}`)
+          .digest('hex');
+        return [
+          playerId || 'unavailable',
+          playerName || 'unavailable',
+          playerBio?.currentTeam?.id || 'unavailable',
+          playerBio?.currentTeam?.name || 'unavailable',
+          playerBio?.currentAge || 'unavailable',
+          playerBio?.primaryNumber || 'unavailable',
+          playerBio?.primaryPosition?.name || 'unavailable',
+          playDetails?.assists || 0,
+          playDetails?.goals || 0,
+          playDetails?.hits || 0,
+          playDetails?.points || 0,
+          playDetails?.penaltyMinutes || 0,
+          result?.event || 'unavailable',
+          hash || 'unavailable',
+        ];
+      });
+      return entries;
+    }
+    return [];
   }
 
   playReducer(player: any, result: any) {
@@ -129,37 +172,6 @@ class LiveGame {
     return playDetails;
   }
 
-  reduceToBronzeEntry(play: any): BronzeEntry[] {
-    if (Object.keys(play).includes('players')) {
-      let players = play.players;
-      let result = play.result;
-      let entries: BronzeEntry[] = players.map((p: Player) => {
-        let player = p;
-        let playerId = player.player?.id || 'unavailable';
-        let playerName = player.player?.fullName?.toString();
-        let playerBio = this.getPlayerBio(playerId.toString());
-        let playDetails = this.playReducer(player, result);
-        return [
-          playerId || 'unavailable',
-          playerName || 'unavailable',
-          playerBio?.currentTeam?.id || 'unavailable',
-          playerBio?.currentTeam?.name || 'unavailable',
-          playerBio?.currentAge || 'unavailable',
-          playerBio?.primaryNumber || 'unavailable',
-          playerBio?.primaryPosition?.name || 'unavailable',
-          playDetails?.assists || 0,
-          playDetails?.goals || 0,
-          playDetails?.hits || 0,
-          playDetails?.points || 0,
-          playDetails?.penaltyMinutes || 0,
-          result?.event || 'unavailable',
-          'sha256(gameId + playId, playerId)' || 'unavailable',
-        ];
-      });
-      return entries;
-    }
-    return [];
-  }
 }
 
 class GamePool {
@@ -172,6 +184,7 @@ class GamePool {
   async addGame(gameId: string) {
     let tracking = this.isTrackingGame(gameId);
     if (!tracking) {
+      console.log(`Adding LiveGame ${gameId} to GamePool!`)
       this.liveGames[gameId] = new LiveGame(gameId);
       await this.liveGames[gameId].init();
     }
@@ -193,6 +206,7 @@ class GamePool {
     Object.keys(this.liveGames).forEach(async (gameId) => {
       let inProgress = await this.liveGames[gameId].getRecentUpdates();
       if (!inProgress) {
+        console.log(`End of ${gameId}`)
         this.removeGame(gameId);
       }
     });
