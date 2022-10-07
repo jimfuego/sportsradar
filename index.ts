@@ -42,13 +42,14 @@ const server = app.listen(PORT, () => {
 // Main job monitors for newly started games
 // Probably run this every 5-10 minutes in "prod"
 
-const cronIntervalSeconds = '5';
+const cronIntervalSeconds = '59';
 const cronJob = cron.schedule(
   `*/${cronIntervalSeconds} * * * * *`,
   async () => {
     await ScheduleService.getLiveGames().then((newGames) => {
-      // console.log(newGames)
-      gameTracker.addGames(newGames);
+      /* Switch these comments to test on previous game*/
+      // gameTracker.addGames(['2022010085']); //comment me in
+      gameTracker.addGames(newGames); // comment me out 
     });
     liveJobTrigger();
   },
@@ -60,11 +61,11 @@ const cronJob = cron.schedule(
  * Up to the minute updates for live games!
  */
 const liveUpdatesJob = cron.schedule(
-  `*/${5} * * * * *`,
+  `*/${30} * * * * *`,
   async () => {
     gameTracker.getUpdates();
   },
-  { scheduled: true }
+  { scheduled: false }
 );
 
 /**

@@ -5,7 +5,7 @@
  * and simplify their retrieval for the scheduler.
  */
 import ScheduleService from '../services/schedule-service';
-import { writeEntriesToBronze } from '../services/sql-service';
+import { insertToBronze, writeEntriesToBronze } from '../services/sql-service';
 
 type Player = {
   player: {
@@ -80,7 +80,7 @@ class LiveGame {
             writeData.push(entry);
           });
         });
-        await writeEntriesToBronze(writeData)
+        await insertToBronze(writeData)
           .then((res) => {
             this.incrementPlayIndex(plays.length);
           })

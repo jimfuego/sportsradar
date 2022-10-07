@@ -53,7 +53,7 @@ const createBronzeTable = (): any => {
   }
 };
 
-const insertToBronze = (players: any[]): any => {
+const insertToBronze = async (players: any[]): Promise<any> => {
   try {
     let sql = `INSERT INTO bronze_table
     (player_id, player_name, team_id, team_name, player_age, player_number, player_position, assists, goals, hits, points, penalty_minutes, player_type, event_hash) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);`;
