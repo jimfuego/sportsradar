@@ -57,8 +57,8 @@ across multiple games.
 
 `POST /add`
 
-- Writes data from a specified gameId if that game data is not present in 
-the database.
+- Writes data from a specified gameId if that game data is not present in
+  the database.
 
 ```json
 //body
