@@ -4,6 +4,10 @@
 
 **Please use Yarn 3.2.1**
 
+## Database
+
+For ease of demo, I used SQLite.
+
 ## Environment Variables
 
 Please include a `.env` file in the root directory with the following variables.
