@@ -8,11 +8,11 @@ import cron from 'node-cron';
 import ScheduleService from './services/schedule-service';
 import { GamePool } from './utils/gameTracker';
 import bronze from './routes/bronze';
-import { createBronzeTable, seedBronzeTable } from './services/sql-service';
+import { createBronzeTable } from './services/sql-service';
 
 const sleep = async (ms: number) => {
-  await new Promise(resolve => setTimeout(resolve, ms))
-}
+  await new Promise((resolve) => setTimeout(resolve, ms));
+};
 
 // setup sqlite db
 createBronzeTable();
@@ -23,8 +23,7 @@ let gameTracker = new GamePool();
 
 const app = express();
 app.use(express.json());
-app.use('/api/v1/app/bronze', bronze)
-
+app.use('/api/v1/app/bronze', bronze);
 
 const PORT = process.env.PORT;
 
@@ -38,7 +37,6 @@ app.get('/', (req, res, next) => {
 // start server
 const server = app.listen(PORT, () => {
   console.log(`Server running on ${PORT}.`);
-
 });
 
 // Main job monitors for newly started games
@@ -73,7 +71,7 @@ const liveUpdatesJob = cron.schedule(
  * job that runs less frequently to merge data from failed_calls_bronze
  * table and game_data_bronze table into game_data_silver table
  */
-const silverJob = cron.schedule(`* 0 * * * *`, async () => { });
+const silverJob = cron.schedule(`* 0 * * * *`, async () => {});
 
 /**
  * Util function to trigger the appropriate behavior of liveUpdatesJob

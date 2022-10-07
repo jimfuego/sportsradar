@@ -1,6 +1,5 @@
 import db from '../utils/sqlite';
 const writeEntriesToBronze = async (entries: any): Promise<boolean> => {
-
   return true;
 };
 
@@ -42,16 +41,15 @@ const createBronzeTable = (): any => {
         penalty_minutes int not null,
         player_type text not null,
         event_hash text not null
-      );`
+      );`;
     let dbres = db.run(sql, (err) => {
       if (err) {
-        return err
+        return err;
       }
       return true;
-    }
-    );
+    });
   } catch (err) {
-    return err;;
+    return err;
   }
 };
 
@@ -60,39 +58,69 @@ const insertToBronze = (players: any[]): any => {
     let sql = `INSERT INTO bronze_table
     (player_id, player_name, team_id, team_name, player_age, player_number, player_position, assists, goals, hits, points, penalty_minutes, player_type, event_hash) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);`;
     let statement = db.prepare(sql);
-    players.forEach(player =>
+    players.forEach((player) =>
       statement.run(player, (err) => {
         if (err) {
-          console.log('err:', err.message)
+          console.log('err:', err.message);
         }
       })
-    )
+    );
   } catch (err) {
     return err;
   }
-}
+};
 
 const seedBronzeTable = (): any => {
   const seedPlayers = [
-    [8476905, 'Chandler Stephenson', 54, 'Vegas Golden Knights', 28, '20', 'Center', 1, 0, 0, 1, 0, 'Goal', 'sha256(gameId + playId, playerId)'],
-    [8477361, 'Cal Petersen', 26, 'Los Angeles Kings', 27, '40', 'Goalie', 0, 0, 0, 0, 0, 'Goal', 'sha25(gameId + playId, playerId)']
-  ]
+    [
+      8476905,
+      'Chandler Stephenson',
+      54,
+      'Vegas Golden Knights',
+      28,
+      '20',
+      'Center',
+      1,
+      0,
+      0,
+      1,
+      0,
+      'Goal',
+      'sha256(gameId + playId, playerId)',
+    ],
+    [
+      8477361,
+      'Cal Petersen',
+      26,
+      'Los Angeles Kings',
+      27,
+      '40',
+      'Goalie',
+      0,
+      0,
+      0,
+      0,
+      0,
+      'Goal',
+      'sha25(gameId + playId, playerId)',
+    ],
+  ];
   try {
     let sql = `INSERT INTO bronze_table
     (player_id, player_name, team_id, team_name, player_age, player_number, player_position, assists, goals, hits, points, penalty_minutes, player_type, event_hash) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);`;
 
     let statement = db.prepare(sql);
-    seedPlayers.forEach(player =>
+    seedPlayers.forEach((player) =>
       statement.run(player, (err) => {
         if (err) {
-          console.log('err:', err.message)
+          console.log('err:', err.message);
         }
       })
-    )
+    );
   } catch (err) {
     return err;
   }
-}
+};
 
 const getAllTables = () => {
   try {
@@ -103,7 +131,7 @@ const getAllTables = () => {
       sqlite_schema
     WHERE 
       type ='table' AND 
-      name NOT LIKE 'sqlite_%';`
+      name NOT LIKE 'sqlite_%';`;
     const dbres = db.all(sql, [], (err, rows) => {
       if (err) {
         console.log('err:', err.message);
@@ -111,18 +139,17 @@ const getAllTables = () => {
       return rows;
     });
     // dbres.close(err => { if (err) console.error(err) })
-    return dbres
+    return dbres;
   } catch (err) {
-    return err;;
+    return err;
   }
-}
+};
 
 export {
   createBronzeTable,
   createTestTable,
   getAllTables,
-  getBronzeTable,
   insertToBronze,
   seedBronzeTable,
-  writeEntriesToBronze
+  writeEntriesToBronze,
 };

@@ -77,7 +77,7 @@ class LiveGame {
         plays.forEach((play: any, i: number) => {
           let entries = this.reduceToBronzeEntry(play);
           entries.forEach((entry) => {
-            writeData.push(entry)
+            writeData.push(entry);
           });
         });
         await writeEntriesToBronze(writeData)
@@ -154,7 +154,7 @@ class LiveGame {
           playDetails?.penaltyMinutes || 0,
           result?.event || 'unavailable',
           'sha256(gameId + playId, playerId)' || 'unavailable',
-        ]
+        ];
       });
       return entries;
     }

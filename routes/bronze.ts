@@ -5,7 +5,7 @@
  */
 import express, { Request, Response } from 'express';
 import db from '../utils/sqlite';
-import { createBronzeTable, getBronzeTable, seedBronzeTable } from '../services/sql-service';
+import { createBronzeTable, seedBronzeTable } from '../services/sql-service';
 import { Responses } from '../utils';
 import { RESPONSE_CODES } from '../utils';
 
@@ -15,7 +15,7 @@ const processResponse = Responses.processResponse;
 
 /**
  * POST: Creates The bronze table
- * 
+ *
  * /api/v1/app/bronze
  */
 router.post('/', async (req: Request, res: Response) => {
@@ -24,7 +24,7 @@ router.post('/', async (req: Request, res: Response) => {
     const createBronze = createBronzeTable();
     processResponse(res, RESPONSE_CODES.OK, { data: createBronze });
   } catch (err) {
-    processErrorResponse(res, err, RESPONSE_CODES.BAD_REQUEST)
+    processErrorResponse(res, err, RESPONSE_CODES.BAD_REQUEST);
   }
 });
 
@@ -36,10 +36,10 @@ router.post('/seed', async (req: Request, res: Response) => {
   try {
     const body = { label: req.body as string };
     const createBronze = createBronzeTable();
-    const bronzeSeed = seedBronzeTable()
+    const bronzeSeed = seedBronzeTable();
     processResponse(res, RESPONSE_CODES.OK, { data: bronzeSeed });
   } catch (err) {
-    processErrorResponse(res, err, RESPONSE_CODES.BAD_REQUEST)
+    processErrorResponse(res, err, RESPONSE_CODES.BAD_REQUEST);
   }
 });
 
@@ -55,9 +55,8 @@ router.get('/', async (req: Request, res: Response) => {
       processResponse(res, RESPONSE_CODES.OK, { data: rows });
     });
   } catch (err) {
-    processErrorResponse(res, err, RESPONSE_CODES.BAD_REQUEST)
+    processErrorResponse(res, err, RESPONSE_CODES.BAD_REQUEST);
   }
 });
 
 export default router;
-
