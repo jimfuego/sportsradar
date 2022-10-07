@@ -1,0 +1,126 @@
+{
+	"info": {
+		"_postman_id": "e68fab3f-7f87-47f4-8bc1-51637dbe4a47",
+		"name": "sportradar",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6727823"
+	},
+	"item": [
+		{
+			"name": "GET /game/:id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{local_server}}/api/v1/app/bronze/game/2022010085",
+					"host": [
+						"{{local_server}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"app",
+						"bronze",
+						"game",
+						"2022010085"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /player/:id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{local_server}}/api/v1/app/bronze/player/8477508",
+					"host": [
+						"{{local_server}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"app",
+						"bronze",
+						"player",
+						"8477508"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{local_server}}/api/v1/app/bronze/",
+					"host": [
+						"{{local_server}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"app",
+						"bronze",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /add",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"gameIds\": [\"2022010074\", \"2022010085\"]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local_server}}/api/v1/app/bronze/add",
+					"host": [
+						"{{local_server}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"app",
+						"bronze",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /seed",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{local_server}}/api/v1/app/bronze/seed",
+					"host": [
+						"{{local_server}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"app",
+						"bronze",
+						"seed"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
