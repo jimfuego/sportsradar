@@ -47,8 +47,8 @@ const cronJob = cron.schedule(
       /* 
         Switch the two lines below to test the scheduler on historical data
       */
-      // gameTracker.addGames(newGames); // comment me out
-      gameTracker.addGames(['2022010074', '2022010085']); //comment me in
+      gameTracker.addGames(newGames); // comment me out
+      // gameTracker.addGames(['2022010074', '2022010085']); //comment me in
     });
     liveJobTrigger();
   },
@@ -79,7 +79,7 @@ const silverJob = cron.schedule(`* 0 * * * *`, async () => {});
 const liveJobTrigger = () => {
   if (gameTracker.isActive()) {
     console.log('GameTracker is active!');
-    console.log('Tracking:', gameTracker._activeGames);
+    console.log('Tracking:', gameTracker.activeGames);
     liveUpdatesJob.start();
   } else {
     console.log('GameTracker is sleeping!');
@@ -88,4 +88,4 @@ const liveJobTrigger = () => {
 };
 
 // for testing purposes
-export { server, app, cronJob, liveUpdatesJob, silverJob };
+export { server, app, cronJob, liveUpdatesJob, silverJob, sleep };
