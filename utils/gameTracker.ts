@@ -74,16 +74,11 @@ class LiveGame {
     return await ScheduleService.getUpdatedData(this.gameId, this.playIndex)
       .then(async (update) => {
         let { plays: plays, inProgress: inProgress } = update;
-        console.log('plays length', plays.length);
         plays.forEach((play: any, i: number) => {
-          console.log('i', i);
           let entries = this.reduceToBronzeEntry(play);
-          console.log('entries len', entries.length);
-          entries.forEach((entry) => writeData.push(entry));
-          // this.reduceToBronzeEntry(play).forEach(entry => {
-          //   console.log('entry: ', entry)
-          //   writeData.push(entry)
-          // });
+          entries.forEach((entry) => {
+            writeData.push(entry)
+          });
         });
         await writeEntriesToBronze(writeData)
           .then((res) => {
@@ -135,7 +130,6 @@ class LiveGame {
   }
 
   reduceToBronzeEntry(play: any): BronzeEntry[] {
-    console.log('!');
     if (Object.keys(play).includes('players')) {
       let players = play.players;
       let result = play.result;
@@ -145,28 +139,25 @@ class LiveGame {
         let playerName = player.player?.fullName?.toString();
         let playerBio = this.getPlayerBio(playerId.toString());
         let playDetails = this.playReducer(player, result);
-        return {
-          playerId: playerId || 'unavailable',
-          playerName: playerName || 'unavailable',
-          // teamId: playerBio.currentTeam.id|| 'unavailable',
-          teamId: playerBio || 'unavailable',
-          teamName: playerBio?.currentTeam?.name || 'unavailable',
-          playerAge: playerBio?.currentAge || 'unavailable',
-          playerNumber: playerBio?.primaryNumber || 'unavailable',
-          playerPosition: playerBio?.primaryPosition?.name || 'unavailable',
-          assists: playDetails?.assists || 'unavailable',
-          goals: playDetails?.goals || 'unavailable',
-          hits: playDetails?.hits || 'unavailable',
-          points: playDetails?.points || 'unavailable',
-          penaltyMinutes: playDetails?.penaltyMinutes || 'unavailable',
-          playerType: result?.event || 'unavailable',
-          eventHash: 'sha256(gameId + playId, playerId)' || 'unavailable',
-        };
+        return [
+          playerId || 'unavailable',
+          playerName || 'unavailable',
+          playerBio?.currentTeam?.id || 'unavailable',
+          playerBio?.currentTeam?.name || 'unavailable',
+          playerBio?.currentAge || 'unavailable',
+          playerBio?.primaryNumber || 'unavailable',
+          playerBio?.primaryPosition?.name || 'unavailable',
+          playDetails?.assists || 0,
+          playDetails?.goals || 0,
+          playDetails?.hits || 0,
+          playDetails?.points || 0,
+          playDetails?.penaltyMinutes || 0,
+          result?.event || 'unavailable',
+          'sha256(gameId + playId, playerId)' || 'unavailable',
+        ]
       });
-      console.log(entries.length);
       return entries;
     }
-    console.log('should not happen');
     return [];
   }
 }
