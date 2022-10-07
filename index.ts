@@ -3,7 +3,7 @@
  *
  * For the sake of time, both the scheduler and server are located in this file.
  */
-import express from 'express';
+import express, { Response } from 'express';
 import cron from 'node-cron';
 import ScheduleService from './services/schedule-service';
 import { GamePool } from './utils/gameTracker';
@@ -16,10 +16,9 @@ const sleep = async (ms: number) => {
 
 // setup sqlite db
 createBronzeTable();
-// delay so db can initialize
-// sleep(500).then(() => seedBronzeTable())
+// sleep(500);
 
-let gameTracker = new GamePool();
+const gameTracker = new GamePool();
 
 const app = express();
 app.use(express.json());
@@ -40,18 +39,16 @@ const server = app.listen(PORT, () => {
 });
 
 // Main job monitors for newly started games
-// Probably run this every 5-10 minutes in "prod"
-
-const cronIntervalSeconds = '5';
+const cronIntervalSeconds = '59';
 const cronJob = cron.schedule(
   `*/${cronIntervalSeconds} * * * * *`,
   async () => {
     await ScheduleService.getLiveGames().then((newGames) => {
-      /* Switch the two lines below to test the scheduler on historical data
-        Note: in "history-mode"
+      /* 
+        Switch the two lines below to test the scheduler on historical data
       */
-      gameTracker.addGames(['2022010085']); //comment me in
       // gameTracker.addGames(newGames); // comment me out
+      gameTracker.addGames(['2022010074', '2022010085']); //comment me in
     });
     liveJobTrigger();
   },
@@ -63,7 +60,7 @@ const cronJob = cron.schedule(
  * Up to the minute updates for live games!
  */
 const liveUpdatesJob = cron.schedule(
-  `*/${10} * * * * *`,
+  `*/${30} * * * * *`,
   async () => {
     gameTracker.getUpdates();
   },

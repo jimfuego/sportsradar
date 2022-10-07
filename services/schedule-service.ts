@@ -9,8 +9,9 @@ enum GameState { // comments denote abstractGameState field (for reference)
 
 export default class ScheduleService {
   /**
+   * Gets today's schedule of games.
    *
-   * @returns
+   * @returns {Promise<JSON>} pertaining to today's schedule
    */
   static async getSchedule(): Promise<any[]> {
     const url = `https://statsapi.web.nhl.com/api/v1/schedule`;
@@ -18,12 +19,12 @@ export default class ScheduleService {
       .get(url)
       .then((res) => {
         if (res) {
-          let data = res.data;
-          let games = data.dates[0].games;
+          const data = res.data;
+          const games = data.dates[0].games;
           return games;
         }
       })
-      .catch((err) => {
+      .catch(() => {
         return [];
       });
   }
@@ -32,45 +33,48 @@ export default class ScheduleService {
    * Retrieves game by ID from the NHL API and saves it to bronze, if the data is
    * not already present.
    *
-   * @returns
+   * @returns {Promise<Record<string, string>[]>} pertaining to the status of requests
    */
   static async getGamesById(
     gameIds: string[]
   ): Promise<Record<string, string>[]> {
-    let response: Record<string, string>[] = [];
+    const response: Record<string, string>[] = [];
     gameIds.forEach(async (gameId) => {
       const liveGame = new LiveGame(gameId);
-      await liveGame.init();
-      return await liveGame
-        .getRecentUpdates()
-        .then(() => {
-          response.push({ gameId: 'Success' });
-        })
-        .catch((err) => {
-          console.log(err);
-          response.push({ gameId: err });
-        });
+      return await liveGame.init().then(async (isGame) => {
+        if (isGame) {
+          return await liveGame
+            .getRecentUpdates()
+            .then(() => {
+              response.push({ gameId: 'Success' });
+            })
+            .catch((err) => {
+              console.log(err);
+              response.push({ gameId: err });
+            });
+        }
+      });
     });
     return response;
   }
 
   /**
-   *
-   * @returns
+   * Retrieves all currently live games.
+   * @returns {Promise<string[]>} of live gameIds
    */
   static async getLiveGames(): Promise<string[]> {
     return await this.getSchedule()
       .then((games) => {
-        let liveGames: string[] = [];
+        const liveGames: string[] = [];
         for (let i = 0; i < games.length; i++) {
           if (games[i].status.codedGameState === GameState.IN_PROGRESS) {
-            let gamePk: string = games[i].gamePk.toString();
+            const gamePk: string = games[i].gamePk.toString();
             liveGames.push(gamePk);
           }
         }
         return liveGames;
       })
-      .catch((err) => {
+      .catch(() => {
         return [];
       });
   }
@@ -81,7 +85,7 @@ export default class ScheduleService {
    * @returns
    */
   static async getLiveData(
-    gameId: string = '2022010074'
+    gameId: string
   ): Promise<Record<string, any>> {
     const url = `https://statsapi.web.nhl.com/api/v1/game/${gameId}/feed/live`;
     return await axios
@@ -92,7 +96,7 @@ export default class ScheduleService {
           liveData: liveData,
         };
       })
-      .catch((err) => {
+      .catch(() => {
         // log timestamp for error, save to table,
         // and retreive stats on another job later(2x per day ?)
         return {};
@@ -121,8 +125,8 @@ export default class ScheduleService {
             plays: { allPlays: allPlays },
           },
         }) => {
-          let inProgress = codedGameState === GameState.IN_PROGRESS;
-          let recentPlays = allPlays.filter((play: any) => {
+          const inProgress = codedGameState === GameState.IN_PROGRESS;
+          const recentPlays = allPlays.filter((play: any) => {
             return play.about.eventIdx > playIndex;
           });
           return {
@@ -131,7 +135,7 @@ export default class ScheduleService {
           };
         }
       )
-      .catch((err) => {
+      .catch(() => {
         // log playIdx for error, save to table, and retreive stats on another job later (2x per day?)
         return {};
       });

@@ -5,7 +5,7 @@
  * and simplify their retrieval for the scheduler.
  */
 import ScheduleService from '../services/schedule-service';
-import { insertToBronze, writeEntriesToBronze } from '../services/sql-service';
+import { insertToBronze } from '../services/sql-service';
 import { createHmac } from 'node:crypto';
 
 type Player = {
@@ -41,46 +41,51 @@ type BronzeEntry = {
 };
 
 class LiveGame {
-  readonly gameId: string;
+  private readonly _gameId: string;
+  public get gameId(): string {
+    return this._gameId;
+  }
   players: any = null;
-  playIndex: number;
+  _playIndex: number;
 
   constructor(gameId: string) {
-    this.gameId = gameId;
-    this.playIndex = -1;
+    this._gameId = gameId;
+    this._playIndex = -1;
   }
 
-  get _playIndex() {
-    return this.playIndex;
+  get playIndex() {
+    return this._playIndex;
   }
 
   getPlayerBio(playerId: string) {
-    return !!playerId
-      ? this.players[`ID${playerId.toString()}`]
-      : 'unavailable';
+    return playerId ? this.players[`ID${playerId.toString()}`] : 'unavailable';
   }
 
-  async init() {
+  async init(): Promise<boolean> {
     if (!this.players) {
-      await ScheduleService.getLiveData(this.gameId).then((liveData) => {
-        this.players = liveData.gameData.players;
+      return await ScheduleService.getLiveData(this.gameId).then((liveData) => {
+        if (liveData?.gameData) {
+          this.players = liveData.gameData.players;
+          return true;
+        }
+        return false;
       });
     }
+    return false;
   }
 
   incrementPlayIndex(increment: number) {
-    this.playIndex += increment;
+    this._playIndex += increment;
   }
 
   async getRecentUpdates() {
-    let writeData: BronzeEntry[] = [];
+    const writeData: BronzeEntry[] = [];
     return await ScheduleService.getUpdatedData(this.gameId, this.playIndex)
       .then(async (update) => {
-        let { plays: plays, inProgress: inProgress } = update;
+        const { plays: plays, inProgress: inProgress } = update;
         plays.forEach((play: any) => {
-          let entries = this.reduceToBronzeEntry(play);
+          const entries = this.reduceToBronzeEntry(play);
           entries.forEach((entry) => {
-            console.log(entry);
             writeData.push(entry);
           });
         });
@@ -104,20 +109,22 @@ class LiveGame {
       const players = play.players;
       const result = play.result;
       const eventIdx = play.about.eventIdx;
-      const dateTime = play.about.dateTime;
       const entries: BronzeEntry[] = players.map((p: Player) => {
         const player = p;
+        const playerType = player.playerType;
         const playerId = player.player?.id || 'unavailable';
         const playerName = player.player?.fullName?.toString();
         const playerBio = this.getPlayerBio(playerId.toString());
         const playDetails = this.playReducer(player, result);
-
-        // assumption: players will not appear in the same play twice
+        // Assumption: players will not appear in the same play twice.
+        // I dont think there is such thing as a double assist or double hit.
+        // If there is, I would certainly like to see one.
         const secret = 'abcdefg';
         const hash = createHmac('sha256', secret)
-          .update(`${eventIdx}${dateTime}${playerId}`)
+          .update(`${eventIdx}${this.gameId}${playerId}${playerType}`)
           .digest('hex');
         return [
+          this.gameId,
           playerId || 'unavailable',
           playerName || 'unavailable',
           playerBio?.currentTeam?.id || 'unavailable',
@@ -130,7 +137,7 @@ class LiveGame {
           playDetails?.hits || 0,
           playDetails?.points || 0,
           playDetails?.penaltyMinutes || 0,
-          result?.event || 'unavailable',
+          playerType || 'unavailable',
           hash || 'unavailable',
         ];
       });
@@ -140,14 +147,14 @@ class LiveGame {
   }
 
   playReducer(player: any, result: any) {
-    let playDetails: Record<string, number> = {
+    const playDetails: Record<string, number> = {
       assists: 0,
       goals: 0,
       hits: 0,
       points: 0,
       penaltyMinutes: 0,
     };
-    let playerType = player.playerType;
+    const playerType = player.playerType;
     switch (result.event) {
       case 'Penalty': {
         if (playerType === 'PenaltyOn') {
@@ -182,7 +189,7 @@ class GamePool {
   }
 
   async addGame(gameId: string) {
-    let tracking = this.isTrackingGame(gameId);
+    const tracking = this.isTrackingGame(gameId);
     if (!tracking) {
       console.log(`Adding LiveGame ${gameId} to GamePool!`);
       this.liveGames[gameId] = new LiveGame(gameId);
@@ -204,7 +211,7 @@ class GamePool {
 
   async getUpdates() {
     Object.keys(this.liveGames).forEach(async (gameId) => {
-      let inProgress = await this.liveGames[gameId].getRecentUpdates();
+      const inProgress = await this.liveGames[gameId].getRecentUpdates();
       if (!inProgress) {
         console.log(`End of ${gameId}`);
         this.removeGame(gameId);
@@ -213,7 +220,7 @@ class GamePool {
   }
 
   isTrackingGame(gameId: string) {
-    let includes = Object.keys(this.liveGames).includes(gameId);
+    const includes = Object.keys(this.liveGames).includes(gameId);
     if (includes) {
       return true;
     }

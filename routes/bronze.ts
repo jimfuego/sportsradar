@@ -3,7 +3,7 @@
  *
  * Contains routes that interact with the bronze table.
  */
-import express, { Request, Response } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import db from '../utils/sqlite';
 import { createBronzeTable, seedBronzeTable } from '../services/sql-service';
 import { Responses } from '../utils';
@@ -35,8 +35,8 @@ router.post('/', async (req: Request, res: Response) => {
 router.post('/seed', async (req: Request, res: Response) => {
   try {
     createBronzeTable();
-    const bronzeSeed = seedBronzeTable();
-    processResponse(res, RESPONSE_CODES.CREATED, { data: bronzeSeed });
+    seedBronzeTable();
+    processResponse(res, RESPONSE_CODES.CREATED, { data: 'Success' });
   } catch (err) {
     processErrorResponse(res, err, RESPONSE_CODES.INTERNAL_SERVER_ERROR);
   }
@@ -50,13 +50,13 @@ router.post('/seed', async (req: Request, res: Response) => {
  */
 router.post('/add', async (req: Request, res: Response) => {
   const body: [any] = req.body.gameIds;
-  try {
-    ScheduleService.getGamesById(body).then((dbResult) => {
+  ScheduleService.getGamesById(body)
+    .then((dbResult) => {
       processResponse(res, RESPONSE_CODES.OK, dbResult);
-    });
-  } catch (err) {
-    processErrorResponse(res, err, RESPONSE_CODES.INTERNAL_SERVER_ERROR);
-  }
+    })
+    .catch((err) =>
+      processErrorResponse(res, err, RESPONSE_CODES.INTERNAL_SERVER_ERROR)
+    );
 });
 
 /**
@@ -65,10 +65,56 @@ router.post('/add', async (req: Request, res: Response) => {
  */
 router.get('/', async (req: Request, res: Response) => {
   try {
-    let sql = 'SELECT * FROM bronze_table';
+    const sql = 'SELECT * FROM bronze_table';
     db.all(sql, (err, rows) => {
       if (err) processErrorResponse(res, err, RESPONSE_CODES.BAD_REQUEST);
       processResponse(res, RESPONSE_CODES.OK, { data: rows });
+    });
+  } catch (err) {
+    processErrorResponse(res, err, RESPONSE_CODES.INTERNAL_SERVER_ERROR);
+  }
+});
+
+/**
+ * GET: Retrieves all bronze_table entries of a given gameId
+ * /api/v1/app/bronze/:gameId
+ */
+router.get(
+  '/game/:id',
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    if (!parseInt(id, 10)) {
+      return next();
+    }
+    try {
+      const sql = `SELECT * FROM bronze_table where game_id = ${id}`;
+      db.all(sql, (err, rows) => {
+        if (err) processErrorResponse(res, err, RESPONSE_CODES.BAD_REQUEST);
+        processResponse(res, RESPONSE_CODES.OK, { data: rows });
+      });
+    } catch (err) {
+      processErrorResponse(res, err, RESPONSE_CODES.INTERNAL_SERVER_ERROR);
+    }
+  }
+);
+
+/**
+ * GET: Retrieves all bronze_table entries of a given playerId
+ * /api/v1/app/bronze/:gameId
+ */
+router.get('/player/:id', (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params;
+  if (!parseInt(id, 10)) {
+    return next();
+  }
+  try {
+    const sql = `SELECT * FROM bronze_table where player_id = ${id}`;
+    db.all(sql, (err, rows) => {
+      if (err) {
+        res.send(err);
+        processErrorResponse(res, err, RESPONSE_CODES.BAD_REQUEST);
+      }
+      return processResponse(res, RESPONSE_CODES.OK, { data: rows });
     });
   } catch (err) {
     processErrorResponse(res, err, RESPONSE_CODES.INTERNAL_SERVER_ERROR);

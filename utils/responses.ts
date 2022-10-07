@@ -5,7 +5,7 @@
  *
  * Intended to be used in ./src/routes directory.
  */
-import { Response } from 'express';
+import { NextFunction, Response } from 'express';
 import {
   DEFAULT_STATUS,
   RESPONSE_CODES,
@@ -63,7 +63,8 @@ export default class ResponseFactory {
   static processErrorResponse(
     res: Response,
     err: any,
-    status: number = RESPONSE_CODES.NOT_ACCEPTABLE
+    status: number = RESPONSE_CODES.NOT_ACCEPTABLE,
+    next?: NextFunction
   ) {
     res.status(status).send(ResponseFactory.createServerResponse(status));
   }
@@ -77,7 +78,7 @@ export default class ResponseFactory {
    */
   static createServerResponse(status: number, data?: unknown | null) {
     status = status in responseMessages ? status : DEFAULT_STATUS;
-    let txtResponse = { message: responseMessages[status] };
+    const txtResponse = { message: responseMessages[status] };
     return data || txtResponse;
   }
 }

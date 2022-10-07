@@ -3,9 +3,15 @@ const writeEntriesToBronze = async (entries: any): Promise<boolean> => {
   return true;
 };
 
+const unique_hash_constraint =
+  'IF NOT EXISTS (SELECT 1 FROM bronze_table where event_hash = ?)';
+
+const bronzeSchema =
+  '(game_id, player_id, player_name, team_id, team_name, player_age, player_number, player_position, assists, goals, hits, points, penalty_minutes, player_type, event_hash) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);';
+
 const createTestTable = (tableName: string): any => {
   try {
-    let dbres = db.exec(`
+    db.exec(`
       DROP TABLE if EXISTS ${tableName};
       CREATE TABLE ${tableName} (
         row_id integer primary key not null,
@@ -27,6 +33,7 @@ const createBronzeTable = (): any => {
   try {
     const sql = `
       CREATE TABLE bronze_table (
+        game_id int not null,
         player_id int not null,
         player_name text not null,
         team_id int not null,
@@ -42,7 +49,7 @@ const createBronzeTable = (): any => {
         player_type text not null,
         event_hash text not null unique
       );`;
-    let dbres = db.run(sql, (err) => {
+    db.run(sql, (err) => {
       if (err) {
         return err;
       }
@@ -55,11 +62,10 @@ const createBronzeTable = (): any => {
 
 const insertToBronze = async (players: any[]): Promise<any> => {
   try {
-    let sql = `INSERT INTO bronze_table
-    (player_id, player_name, team_id, team_name, player_age, player_number, player_position, assists, goals, hits, points, penalty_minutes, player_type, event_hash) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);`;
-    let statement = db.prepare(sql);
+    const sql = `INSERT OR IGNORE INTO bronze_table ${bronzeSchema}`;
+    const statement = db.prepare(sql);
     players.forEach((player) =>
-      statement.run(player, (err) => {
+      statement.run(player, { $id: player[1] }, (err: { message: any }) => {
         if (err) {
           console.log('err:', err.message);
         }
@@ -73,43 +79,44 @@ const insertToBronze = async (players: any[]): Promise<any> => {
 const seedBronzeTable = (): any => {
   const seedPlayers = [
     [
-      8476905,
-      'Chandler Stephenson',
-      54,
-      'Vegas Golden Knights',
-      28,
-      '20',
-      'Center',
-      1,
+      '2022010074',
+      8478465,
+      'Guillaume Brisebois',
+      23,
+      'Vancouver Canucks',
+      25,
+      '55',
+      'Defenseman',
       0,
       0,
       1,
       0,
-      'Goal',
-      'sha256(gameId + playId, playerId)',
+      0,
+      'Hitter',
+      '6659c1d6f8b9ed57997695172c4ddc19158daf64ad402b7c69f2db6c733d53b3',
     ],
     [
-      8477361,
-      'Cal Petersen',
-      26,
-      'Los Angeles Kings',
-      27,
-      '40',
-      'Goalie',
+      '2022010074',
+      8477937,
+      'Jake Virtanen',
+      'unavailable',
+      'unavailable',
+      'unavailable',
+      '18',
+      'Right Wing',
       0,
       0,
       0,
       0,
       0,
-      'Goal',
-      'sha25(gameId + playId, playerId)',
+      'Hittee',
+      'd33d8cd4cb7ac7ea21df4705a1d55bbd399d9d1c02ed1f61970a0bfeafd75bc6',
     ],
   ];
   try {
-    let sql = `INSERT INTO bronze_table
-    (player_id, player_name, team_id, team_name, player_age, player_number, player_position, assists, goals, hits, points, penalty_minutes, player_type, event_hash) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);`;
+    const sql = `INSERT OR IGNORE INTO bronze_table ${bronzeSchema}`;
 
-    let statement = db.prepare(sql);
+    const statement = db.prepare(sql);
     seedPlayers.forEach((player) =>
       statement.run(player, (err) => {
         if (err) {
@@ -124,7 +131,7 @@ const seedBronzeTable = (): any => {
 
 const getAllTables = () => {
   try {
-    let sql = `
+    const sql = `
     SELECT 
       name
     FROM 
@@ -138,7 +145,6 @@ const getAllTables = () => {
       }
       return rows;
     });
-    // dbres.close(err => { if (err) console.error(err) })
     return dbres;
   } catch (err) {
     return err;
