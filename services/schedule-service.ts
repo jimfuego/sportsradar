@@ -29,23 +29,28 @@ export default class ScheduleService {
   }
 
   /**
-     * Retrieves game by ID from the NHL API and saves it to bronze, if the data is 
-     * not already present.
-     * 
-     * @returns
-     */
-  static async getGamesById(gameIds: string[]): Promise<Record<string, string>[]> {
+   * Retrieves game by ID from the NHL API and saves it to bronze, if the data is
+   * not already present.
+   *
+   * @returns
+   */
+  static async getGamesById(
+    gameIds: string[]
+  ): Promise<Record<string, string>[]> {
     let response: Record<string, string>[] = [];
     gameIds.forEach(async (gameId) => {
       const liveGame = new LiveGame(gameId);
       await liveGame.init();
-      return await liveGame.getRecentUpdates().then(() => {
-        response.push({ gameId: 'Success' })
-      }).catch(err => {
-        console.log(err)
-        response.push({ gameId: err })
-      });
-    })
+      return await liveGame
+        .getRecentUpdates()
+        .then(() => {
+          response.push({ gameId: 'Success' });
+        })
+        .catch((err) => {
+          console.log(err);
+          response.push({ gameId: err });
+        });
+    });
     return response;
   }
 

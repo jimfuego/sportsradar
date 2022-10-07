@@ -8,7 +8,6 @@ import ScheduleService from '../services/schedule-service';
 import { insertToBronze, writeEntriesToBronze } from '../services/sql-service';
 import { createHmac } from 'node:crypto';
 
-
 type Player = {
   player: {
     id: number;
@@ -56,7 +55,9 @@ class LiveGame {
   }
 
   getPlayerBio(playerId: string) {
-    return (!!playerId) ? this.players[`ID${playerId.toString()}`] : 'unavailable';
+    return !!playerId
+      ? this.players[`ID${playerId.toString()}`]
+      : 'unavailable';
   }
 
   async init() {
@@ -79,7 +80,7 @@ class LiveGame {
         plays.forEach((play: any) => {
           let entries = this.reduceToBronzeEntry(play);
           entries.forEach((entry) => {
-            console.log(entry)
+            console.log(entry);
             writeData.push(entry);
           });
         });
@@ -171,7 +172,6 @@ class LiveGame {
     }
     return playDetails;
   }
-
 }
 
 class GamePool {
@@ -184,7 +184,7 @@ class GamePool {
   async addGame(gameId: string) {
     let tracking = this.isTrackingGame(gameId);
     if (!tracking) {
-      console.log(`Adding LiveGame ${gameId} to GamePool!`)
+      console.log(`Adding LiveGame ${gameId} to GamePool!`);
       this.liveGames[gameId] = new LiveGame(gameId);
       await this.liveGames[gameId].init();
     }
@@ -206,7 +206,7 @@ class GamePool {
     Object.keys(this.liveGames).forEach(async (gameId) => {
       let inProgress = await this.liveGames[gameId].getRecentUpdates();
       if (!inProgress) {
-        console.log(`End of ${gameId}`)
+        console.log(`End of ${gameId}`);
         this.removeGame(gameId);
       }
     });

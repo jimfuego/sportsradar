@@ -5,7 +5,7 @@
  */
 import express, { Request, Response } from 'express';
 import db from '../utils/sqlite';
-import { createBronzeTable, seedBronzeTable, } from '../services/sql-service';
+import { createBronzeTable, seedBronzeTable } from '../services/sql-service';
 import { Responses } from '../utils';
 import { RESPONSE_CODES } from '../utils';
 import ScheduleService from '../services/schedule-service';
@@ -43,16 +43,16 @@ router.post('/seed', async (req: Request, res: Response) => {
 });
 
 /**
- * POST: Adds 
- * 
+ * POST: Adds
+ *
  * @body string[] of gameIds
  * /api/v1/app/bronze/add
  */
 router.post('/add', async (req: Request, res: Response) => {
   const body: [any] = req.body.gameIds;
   try {
-    ScheduleService.getGamesById(body).then(dbResult => {
-      processResponse(res, RESPONSE_CODES.OK, dbResult)
+    ScheduleService.getGamesById(body).then((dbResult) => {
+      processResponse(res, RESPONSE_CODES.OK, dbResult);
     });
   } catch (err) {
     processErrorResponse(res, err, RESPONSE_CODES.INTERNAL_SERVER_ERROR);
