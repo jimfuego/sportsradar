@@ -1,3 +1,8 @@
+/**
+ * @file index.spec.ts
+ * This file tests the specifications of our
+ * Express server
+ */
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import nock from 'nock';

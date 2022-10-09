@@ -1,3 +1,8 @@
+/**
+ * @file ScheduleService.ts
+ *
+ * This service handles the retrieving as well as some cleaning of NHL game data.
+ */
 import axios from 'axios';
 import { LiveGame } from '../utils/gameTracker';
 
@@ -80,7 +85,7 @@ export default class ScheduleService {
   }
 
   /**
-   *
+   * Retrieves live or past updates for the corresponding gameID.
    * @param gameId
    * @returns
    */
@@ -103,7 +108,9 @@ export default class ScheduleService {
 
   // current
   /**
-   *
+   * Retrieves updates of a corresponding gameId and filters them by the given 
+   * play index.
+
    * @param gameId
    * @param playIndex
    * @returns Promise with a list of recent plays and whether or not

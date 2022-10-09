@@ -43,7 +43,7 @@ router.post('/seed', async (req: Request, res: Response) => {
 });
 
 /**
- * POST: Adds
+ * POST: Adds game data to the bronze table by its corresponding gameId.
  *
  * @body string[] of gameIds
  * /api/v1/app/bronze/add
@@ -60,7 +60,7 @@ router.post('/add', async (req: Request, res: Response) => {
 });
 
 /**
- * GET: Retrieves all bronze_table entries
+ * GET: Retrieves all bronze_table entries.
  * /api/v1/app/bronze
  */
 router.get('/', async (req: Request, res: Response) => {
@@ -76,7 +76,7 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 /**
- * GET: Retrieves all bronze_table entries of a given gameId
+ * GET: Retrieves all bronze_table entries of a corresponding gameId.
  * /api/v1/app/bronze/:gameId
  */
 router.get(
@@ -99,7 +99,7 @@ router.get(
 );
 
 /**
- * GET: Retrieves all bronze_table entries of a given playerId
+ * GET: Retrieves all bronze_table entries of a corresponding playerId
  * /api/v1/app/bronze/:gameId
  */
 router.get('/player/:id', (req: Request, res: Response, next: NextFunction) => {

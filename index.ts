@@ -16,7 +16,6 @@ const sleep = async (ms: number) => {
 
 // setup sqlite db
 createBronzeTable();
-// sleep(500);
 
 const gameTracker = new GamePool();
 

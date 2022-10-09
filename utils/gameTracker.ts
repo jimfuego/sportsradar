@@ -40,6 +40,11 @@ type BronzeEntry = {
   eventHash: string;
 };
 
+/**
+ * Support class that handles data fetching for live games.
+ * This class is not intended to be accessed directly, but is self contained,
+ * and COULD be used independently.
+ */
 class LiveGame {
   private readonly _gameId: string;
   public get gameId(): string {
@@ -57,10 +62,10 @@ class LiveGame {
     return this._playIndex;
   }
 
-  getPlayerBio(playerId: string) {
-    return playerId ? this.players[`ID${playerId.toString()}`] : 'unavailable';
-  }
-
+  /**
+   * Retrieves player and game data to be referenced directly when parsing live game data.
+   * @returns
+   */
   async init(): Promise<boolean> {
     if (!this.players) {
       return await ScheduleService.getLiveData(this.gameId).then((liveData) => {
@@ -74,10 +79,28 @@ class LiveGame {
     return false;
   }
 
+  /**
+   * Retrieves played bio according to the given ID
+   * @param playerId
+   * @returns
+   */
+  getPlayerBio(playerId: string) {
+    return playerId ? this.players[`ID${playerId.toString()}`] : 'unavailable';
+  }
+
+  /**
+   * Used to increment the play index, which is used to filter new plays from
+   * the live pudate response.
+   * @param increment
+   */
   incrementPlayIndex(increment: number) {
     this._playIndex += increment;
   }
 
+  /**
+   * Gets most recent updates on a LiveGame.
+   * @returns
+   */
   async getRecentUpdates() {
     const writeData: BronzeEntry[] = [];
     return await ScheduleService.getUpdatedData(this.gameId, this.playIndex)
@@ -104,6 +127,12 @@ class LiveGame {
       });
   }
 
+  /**
+   * Takes a raw play (response from the server), and reduces it to the form that is
+   * stored in bronze_table
+   * @param play
+   * @returns
+   */
   reduceToBronzeEntry(play: any): BronzeEntry[] {
     if (Object.keys(play).includes('players')) {
       const players = play.players;
@@ -146,6 +175,13 @@ class LiveGame {
     return [];
   }
 
+  /**
+   * Takes a player object (serrver response) and performs the necessary transformations
+   * to apply to the to-be bronze-entry.
+   * @param player
+   * @param result
+   * @returns
+   */
   playReducer(player: any, result: any) {
     const playDetails: Record<string, number> = {
       assists: 0,
@@ -181,6 +217,9 @@ class LiveGame {
   }
 }
 
+/**
+ * Class made to manage ongoing LiveGames (above).
+ */
 class GamePool {
   liveGames: Record<string, LiveGame> = {};
 
@@ -188,6 +227,10 @@ class GamePool {
     return Object.keys(this.liveGames);
   }
 
+  /**
+   * Adds a game to the GamePool by its gameId.
+   * @param gameId
+   */
   async addGame(gameId: string) {
     const tracking = this.isTrackingGame(gameId);
     if (!tracking) {
@@ -197,18 +240,30 @@ class GamePool {
     }
   }
 
+  /**
+   * Batch add for gameIds.
+   * @param games
+   */
   addGames(games: string[]) {
     games.forEach(async (game) => {
       await this.addGame(game);
     });
   }
 
+  /**
+   * Removes a game by its corresponding id.
+   * @param gameId
+   */
   removeGame(gameId: string) {
     if (this.isTrackingGame(gameId)) {
       delete this.liveGames[gameId];
     }
   }
 
+  /**
+   * Goes through each LiveGame retrieves the most recent updates, and writes those
+   * updates to bronze.
+   */
   async getUpdates() {
     Object.keys(this.liveGames).forEach(async (gameId) => {
       const inProgress = await this.liveGames[gameId].getRecentUpdates();
@@ -219,6 +274,11 @@ class GamePool {
     });
   }
 
+  /**
+   * Used to check if the GamPool is alreqady tracking a particular game.
+   * @param gameId
+   * @returns
+   */
   isTrackingGame(gameId: string) {
     const includes = Object.keys(this.liveGames).includes(gameId);
     if (includes) {
@@ -227,6 +287,10 @@ class GamePool {
     return false;
   }
 
+  /**
+   * Used to dtermine whether or no the GamePool is currenty tracking any LiveGames.
+   * @returns
+   */
   isActive() {
     return Object.keys(this.liveGames).length > 0;
   }
