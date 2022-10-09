@@ -3,7 +3,7 @@
  *
  * For the sake of time, both the scheduler and server are located in this file.
  */
-import express, { Response } from 'express';
+import express from 'express';
 import cron from 'node-cron';
 import ScheduleService from './services/schedule-service';
 import { GamePool } from './utils/gameTracker';
@@ -52,7 +52,7 @@ const server = app.listen(PORT, () => {
 });
 
 // Main job monitors for newly started games
-const cronIntervalSeconds = '1';
+const cronIntervalSeconds = '30';
 const cronJob = cron.schedule(
   `*/${cronIntervalSeconds} * * * * *`,
   async () => {
@@ -73,7 +73,7 @@ const cronJob = cron.schedule(
  * Up to the minute updates for live games!
  */
 const liveUpdatesJob = cron.schedule(
-  `*/${30} * * * * *`,
+  `*/${cronIntervalSeconds} * * * * *`,
   async () => {
     gameTracker.getUpdates();
   },
@@ -84,7 +84,7 @@ const liveUpdatesJob = cron.schedule(
  * job that runs less frequently to merge data from failed_calls_bronze
  * table and game_data_bronze table into game_data_silver table
  */
-const silverJob = cron.schedule(`* 0 * * * *`, async () => {});
+const silverJob = cron.schedule(`* 0 * * * *`, async () => { });
 
 // for testing purposes
 export { server, app, cronJob, liveUpdatesJob, silverJob, sleep };
