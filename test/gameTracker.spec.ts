@@ -3,7 +3,7 @@
  * This file tests the specifications of our
  * LiveGame and GameTracker classes.
  */
-import chai, { expect } from 'chai';
+import { expect } from 'chai';
 import { GamePool } from '../utils/gameTracker';
 
 describe('Our lovely GameTracker (and LiveGame)', () => {
