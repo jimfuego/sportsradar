@@ -43,7 +43,7 @@ type BronzeEntry = {
 /**
  * Support class that handles data fetching for live games.
  * This class is not intended to be accessed directly, but is self contained.
- * Be sure to call init() after construction if using this class outside of 
+ * Be sure to call init() after construction if using this class outside of
  * GamePool!
  */
 class LiveGame {

@@ -19,6 +19,14 @@ $ yarn
 $ yarn dev
 ```
 
+## Testing
+
+Basic tests are included to check the functionality of the server as well as the GameTacker and LiveGame classes. These tests are called on a husky hook, and tests must succeed if changes are to be committed.
+
+## Postinstall
+
+Husky is used as a hook on out git commands. It should properly install on `yarn install`. If husky hooks are not triggering, run `yarn husky install` after initializing the yarn project
+
 ## What is happening?
 
 The main scheduler looks for currently live games.
