@@ -14,7 +14,7 @@ describe('Our lovely GameTracker (and LiveGame)', () => {
     '20220104',
     '20220105',
     '20220106',
-  ];
+  ]; // not real games
 
   it('Checks individual game adds', function () {
     const gp = new GamePool();
