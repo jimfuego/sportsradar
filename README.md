@@ -35,6 +35,8 @@ across multiple games.
 
 ## **Endpoints**
 
+If one desires to test the app, and **no games are live**, the gametracker app can be seeded by calling a POST to `api/vi/app/bronze/add`, as it is described below. That will enable database queries such ad `bronze/:playerId` and `bronze/:gameId`. The gameIds in the example below are valid, and can be used for this seed.
+
 ### Bronze
 
 [localhost:7777/api/v1/app/bronze/](localhost:7777/api/v1/app/bronze/)
