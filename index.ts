@@ -25,6 +25,23 @@ app.use('/api/v1/app/bronze', bronze);
 
 const PORT = process.env.PORT || 7777;
 
+/* Express setup */
+
+// say hello
+app.get('/', (req, res, next) => {
+  res.status(200).json({
+    message: 'Hello, there!',
+  });
+});
+
+// start server
+const server = app.listen(PORT, () => {
+  console.log(`Server running on ${PORT}.`);
+});
+
+
+/* Cron */
+
 /**
  * Util function to trigger the appropriate behavior of liveUpdatesJob
  */
@@ -38,18 +55,6 @@ const liveJobTrigger = () => {
     liveUpdatesJob.stop();
   }
 };
-
-// say hello
-app.get('/', (req, res, next) => {
-  res.status(200).json({
-    message: 'Hello, there!',
-  });
-});
-
-// start server
-const server = app.listen(PORT, () => {
-  console.log(`Server running on ${PORT}.`);
-});
 
 // Main job monitors for newly started games
 const cronIntervalSeconds = '30';
@@ -84,7 +89,7 @@ const liveUpdatesJob = cron.schedule(
  * job that runs less frequently to merge data from failed_calls_bronze
  * table and game_data_bronze table into game_data_silver table
  */
-const silverJob = cron.schedule(`* 0 * * * *`, async () => { });
+const silverJob = cron.schedule(`* 0 * * * *`, async () => {});
 
 // for testing purposes
 export { server, app, cronJob, liveUpdatesJob, silverJob, sleep };
