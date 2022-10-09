@@ -47,7 +47,7 @@ If one desires to test the app, and **no games are live**, the gametracker app c
 
 ### Bronze
 
-[localhost:7777/api/v1/app/bronze/](localhost:7777/api/v1/app/bronze/)
+[localhost:7777/api/v1/app/bronze/](localhost:7777/api/v1/app/bronze)
 
 `GET /`
 
@@ -83,7 +83,7 @@ If one desires to test the app, and **no games are live**, the gametracker app c
 
 ### Silver
 
-[localhost:7777/api/v1/app/silver/](localhost:7777/api/v1/app/silver/)
+[localhost:7777/api/v1/app/silver/](localhost:7777/api/v1/app/silver)
 
 `GET /`
 
