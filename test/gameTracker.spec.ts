@@ -4,28 +4,49 @@
  * LiveGame and GameTracker classes.
  */
 import chai, { expect } from 'chai';
-import chaiHttp from 'chai-http';
-import { app, server, cronJob, liveUpdatesJob, silverJob } from '../index';
-chai.use(chaiHttp);
+import { GamePool } from '../utils/gameTracker';
 
 describe('Our lovely GameTracker (and LiveGame)', () => {
-  //  test test
-  it('Should always pass', function () {
-    expect(1).to.equal(1);
+  const gameIds = [
+    '20220101',
+    '20220102',
+    '20220103',
+    '20220104',
+    '20220105',
+    '20220106',
+  ];
+
+  it('Checks individual game adds', function () {
+    const gp = new GamePool();
+    expect(gp.isActive()).to.be.false;
+    gameIds.forEach((id) => {
+      gp.addGame(id);
+      expect(gp.isTrackingGame(id)).to.be.true;
+      expect(gp.isActive()).to.be.true;
+    });
   });
 
-  // LiveGame
-  // it('is a test', function (done) {
+  it('Checks bulk game adds', function () {
+    const gp = new GamePool();
+    expect(gp.isActive()).to.be.false;
+    gp.addGames(gameIds);
+    expect(gp.isActive()).to.be.true;
+    gameIds.forEach((id) => {
+      expect(gp.isTrackingGame(id)).to.be.true;
+      expect(gp.isTrackingGame('72842837')).to.be.false;
+    });
+  });
 
-  // });
-
-  // // GameTracker
-  // it('is a test', function (done) {
-
-  // });
-
-  // // cleanup
-  // after(() => {
-
-  // });
+  it('Checks that games are properly removed', function () {
+    const gp = new GamePool();
+    expect(gp.isActive()).to.be.false;
+    gp.addGames(gameIds);
+    expect(gp.isActive()).to.be.true;
+    gameIds.forEach((id) => {
+      expect(gp.isTrackingGame(id)).to.be.true;
+      gp.removeGame(id);
+      expect(gp.isTrackingGame(id)).to.be.false;
+    });
+    expect(gp.isActive()).to.be.false;
+  });
 });

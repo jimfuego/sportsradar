@@ -184,7 +184,7 @@ class LiveGame {
 class GamePool {
   liveGames: Record<string, LiveGame> = {};
 
-  get _activeGames() {
+  get activeGames() {
     return Object.keys(this.liveGames);
   }
 

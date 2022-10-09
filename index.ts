@@ -24,7 +24,21 @@ const app = express();
 app.use(express.json());
 app.use('/api/v1/app/bronze', bronze);
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 7777;
+
+/**
+ * Util function to trigger the appropriate behavior of liveUpdatesJob
+ */
+const liveJobTrigger = () => {
+  if (gameTracker.isActive()) {
+    console.log('GameTracker is active!');
+    console.log('Tracking:', gameTracker.activeGames);
+    liveUpdatesJob.start();
+  } else {
+    console.log('GameTracker is sleeping!');
+    liveUpdatesJob.stop();
+  }
+};
 
 // say hello
 app.get('/', (req, res, next) => {
@@ -39,7 +53,7 @@ const server = app.listen(PORT, () => {
 });
 
 // Main job monitors for newly started games
-const cronIntervalSeconds = '59';
+const cronIntervalSeconds = '1';
 const cronJob = cron.schedule(
   `*/${cronIntervalSeconds} * * * * *`,
   async () => {
@@ -72,20 +86,6 @@ const liveUpdatesJob = cron.schedule(
  * table and game_data_bronze table into game_data_silver table
  */
 const silverJob = cron.schedule(`* 0 * * * *`, async () => {});
-
-/**
- * Util function to trigger the appropriate behavior of liveUpdatesJob
- */
-const liveJobTrigger = () => {
-  if (gameTracker.isActive()) {
-    console.log('GameTracker is active!');
-    console.log('Tracking:', gameTracker.activeGames);
-    liveUpdatesJob.start();
-  } else {
-    console.log('GameTracker is sleeping!');
-    liveUpdatesJob.stop();
-  }
-};
 
 // for testing purposes
 export { server, app, cronJob, liveUpdatesJob, silverJob, sleep };

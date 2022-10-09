@@ -84,9 +84,7 @@ export default class ScheduleService {
    * @param gameId
    * @returns
    */
-  static async getLiveData(
-    gameId: string
-  ): Promise<Record<string, any>> {
+  static async getLiveData(gameId: string): Promise<Record<string, any>> {
     const url = `https://statsapi.web.nhl.com/api/v1/game/${gameId}/feed/live`;
     return await axios
       .get(url)

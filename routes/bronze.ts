@@ -52,10 +52,10 @@ router.post('/add', async (req: Request, res: Response) => {
   const body: [any] = req.body.gameIds;
   ScheduleService.getGamesById(body)
     .then((dbResult) => {
-      processResponse(res, RESPONSE_CODES.OK, dbResult);
+      processResponse(res, RESPONSE_CODES.CREATED, dbResult);
     })
     .catch((err) =>
-      processErrorResponse(res, err, RESPONSE_CODES.INTERNAL_SERVER_ERROR)
+      processErrorResponse(res, err, RESPONSE_CODES.NOT_ACCEPTABLE)
     );
 });
 
