@@ -13,7 +13,6 @@ Therefore, the database is not persistent, but the concepts are clearly on displ
 ## Commands
 
 The following commands will install the necessary dependencies, and run the server.
-A database (as explained above) is needed for pipeline functionality.
 
 ```bash
 $ yarn set version 3.2.1
