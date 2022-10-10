@@ -6,7 +6,7 @@ Please use Yarn 3.2.1
 
 ## Database
 
-For ease of demo, I used SQLite. No setup is required. 
+For ease of demo, I used SQLite. No setup is required.
 
 Therefore, the database is not persistent, but the concepts are clearly on display.
 
@@ -61,7 +61,7 @@ If one desires to test the app, and **no games are live**, the gametracker app c
 
 `GET /:playerId`
 
-- Retrieves data from a specified gameId in the format `8477508`
+- Retrieves data from a specified playerId in the format `8477508`
 
 `POST /`
 
@@ -75,7 +75,7 @@ If one desires to test the app, and **no games are live**, the gametracker app c
 ```json
 //body
 {
-  "gameIds":["2022010074", "2022010085"]
+  "gameIds": ["2022010074", "2022010085"]
 }
 ```
 
@@ -94,6 +94,6 @@ If one desires to test the app, and **no games are live**, the gametracker app c
 
 ## In Conclusion
 
-In production, there would obviously be a need for persistence. 
+In production, there would obviously be a need for persistence.
 
 I left off conceptualizing the silver layer. Typically, there would not have been transformations being performed going into the bronze layer. If granted a little more time, I would have taken unprocessed data into the bronze layer (i.e. the data used to compute the final values) if space were unlimited. The data specified in the [assignment instructions ](https://github.com/sportradarus/sportradar-advanced-challenge) would be transformed on an interval of its own (line 91 index.js). This would likely be held in a silver layer. Things like aggregations would likewise be run on schedules of their own and processed into tables contained in a gold layer.
