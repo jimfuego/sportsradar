@@ -75,7 +75,7 @@ If one desires to test the app, and **no games are live**, the gametracker app c
   the database.
 
 ```json
-//body
+// body
 {
   "gameIds": ["2022010074", "2022010085"]
 }
