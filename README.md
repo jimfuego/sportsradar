@@ -14,7 +14,7 @@ Therefore, the database is not persistent, but the concepts are clearly on displ
 
 The following commands will install the necessary dependencies, and run the server.
 
-```bash
+```cmd
 $ yarn set version 3.2.1
 $ yarn
 $ yarn dev
@@ -30,7 +30,7 @@ Basic tests are included to check the functionality of the server as well as the
 
 You can also run the tests with:
 
-```bash
+```cmd
 yarn test
 ```
 
