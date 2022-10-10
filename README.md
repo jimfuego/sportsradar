@@ -31,7 +31,7 @@ Basic tests are included to check the functionality of the server as well as the
 You can also run the tests with:
 
 ```cmd
-yarn test
+$ yarn test
 ```
 
 ## What is happening?
