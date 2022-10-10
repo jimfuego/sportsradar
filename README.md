@@ -28,6 +28,12 @@ Husky is used as a hook on out git commands. It should properly install on `yarn
 
 Basic tests are included to check the functionality of the server as well as the GameTacker and LiveGame classes. These tests are called on a husky hook, and tests must succeed if changes are to be committed.
 
+You can also run the tests with:
+
+```bash
+yarn test
+```
+
 ## What is happening?
 
 The main scheduler looks for currently live games.
