@@ -22,7 +22,7 @@ $ yarn dev
 
 ## Postinstall
 
-Husky is used as a hook on out git commands. It should properly install on `yarn install`. If husky hooks are not triggering, run `yarn husky install` after initializing the yarn project
+Husky is used as a hook on out git commands. It should properly install on `yarn install`. If husky hooks are not triggering, run `yarn husky install` after initializing the yarn project.
 
 ## Testing
 
